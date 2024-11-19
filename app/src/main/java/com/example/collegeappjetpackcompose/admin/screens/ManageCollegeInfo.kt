@@ -107,7 +107,7 @@ fun ManageCollegeInfo(navController: NavController) {
 
         topBar = {
             TopAppBar(title = {
-                Text(text = "Manage College Info",
+                Text(text = "Manage School Info",
                     color = Color.White
                 )
             },
@@ -135,7 +135,7 @@ fun ManageCollegeInfo(navController: NavController) {
                         title = it
                     },
                         placeholder = {
-                            Text(text = "College Info")},
+                            Text(text = "School Name")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
@@ -145,7 +145,7 @@ fun ManageCollegeInfo(navController: NavController) {
                         desc = it
                     },
                         placeholder = {
-                            Text(text = "College Description")},
+                            Text(text = "School Description")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
@@ -155,7 +155,7 @@ fun ManageCollegeInfo(navController: NavController) {
                         address = it
                     },
                         placeholder = {
-                            Text(text = "College Address")},
+                            Text(text = "School Address")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
@@ -166,7 +166,7 @@ fun ManageCollegeInfo(navController: NavController) {
                         link = it
                     },
                         placeholder = {
-                            Text(text = "Website link")},
+                            Text(text = "School Website link")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
@@ -221,11 +221,9 @@ fun ManageCollegeInfo(navController: NavController) {
                                 .padding(4.dp)
 
                         ) {
-                            Text(text = "Update College Info")
-
+                            Text(text = "Update School Info")
                         }
                     }
-
                 }
         }
     }

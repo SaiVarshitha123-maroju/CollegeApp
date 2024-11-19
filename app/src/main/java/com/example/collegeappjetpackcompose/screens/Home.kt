@@ -44,7 +44,9 @@ fun Home() {
     bannerViewModel.getBanner()
 
     val collegeInfo by collegeInfoViewModel.collegeInfo.observeAsState(null)
-    //collegeInfoViewModel.getCollegeInfo()
+    LaunchedEffect(Unit) {
+        collegeInfoViewModel.getCollegeInfo()
+    }
 
     val noticeViewModel : NoticeViewModel = viewModel()
     val noticeList by noticeViewModel.noticeList.observeAsState(null)
@@ -89,19 +91,19 @@ fun Home() {
         }
         item{
             if(collegeInfo!=null){
-                Text(text = collegeInfo!![0].name ?: "College Name Not Available",
+                Text(text = collegeInfo!![0].name ?: "School Name Not Available",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = collegeInfo!![0].desc ?: "College Description Not Available",
+                Text(text = collegeInfo!![0].desc ?: "School Description Not Available",
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = collegeInfo!![0].websiteLink ?: "College Description Not Available",
+                Text(text = collegeInfo!![0].websiteLink ?: "School Website Link Not Available",
                     color = SkyBlue,
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp

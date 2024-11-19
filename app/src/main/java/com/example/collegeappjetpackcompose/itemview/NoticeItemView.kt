@@ -19,11 +19,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.rememberAsyncImagePainter
-
 import com.example.collegeappjetpackcompose.R
 import com.example.collegeappjetpackcompose.models.NoticeModel
 import com.example.collegeappjetpackcompose.ui.theme.SkyBlue
-import com.example.collegeappjetpackcompose.ui.theme.TITLE_SIZE
 import com.example.collegeappjetpackcompose.utils.Constant.isAdmin
 
 @Composable
@@ -52,8 +50,7 @@ fun NoticeItemView(noticeModel: NoticeModel,
                  Image(
                      painter = rememberAsyncImagePainter(
                          model = noticeModel.imageUrl,
-                         placeholder = painterResource(R.drawable.image_placeholder),
-                         error = painterResource(R.drawable.img)
+                         placeholder = painterResource(R.drawable.image_placeholder)
                      )
                      ,
                      contentDescription = null,

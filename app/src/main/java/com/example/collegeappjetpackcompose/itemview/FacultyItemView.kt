@@ -66,20 +66,12 @@ fun FacultyItemView(catName: String,
                  .clickable {
                      delete(catName)
                  }
-
-
              ) {
                  Image(painter = painterResource(id = R.drawable.delete),
                      contentDescription = null,
                      modifier = Modifier.padding(8.dp)
                  )
              }
-
-
-
-
          }
-
-
     }
 }

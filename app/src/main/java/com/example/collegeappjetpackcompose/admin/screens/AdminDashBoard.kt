@@ -1,8 +1,6 @@
 package com.example.collegeappjetpackcompose.admin.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,7 +10,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -22,8 +19,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.collegeappjetpackcompose.models.DashBoardItemModel
 import com.example.collegeappjetpackcompose.navigation.Routes
-import com.example.collegeappjetpackcompose.ui.theme.Purple40
-import com.example.collegeappjetpackcompose.ui.theme.Purple80
 import com.example.collegeappjetpackcompose.ui.theme.TITLE_SIZE
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,13 +32,13 @@ fun AdminDashBoard(navController: NavController) {
                 Routes.ManageBanner.route),
             DashBoardItemModel("Manage Notice",
                 Routes.ManageNotice.route),
-            DashBoardItemModel("Manage Faculty",
+            DashBoardItemModel("Manage Teachers",
                 Routes.ManageFaculty.route),
-            DashBoardItemModel("Manage Gallery",
+            DashBoardItemModel("Manage Events",
                 Routes.ManageGallery.route),
-            DashBoardItemModel("Manage Assignments",
+            DashBoardItemModel("Manage Homeworks",
                 Routes.ManageAssign.route),
-            DashBoardItemModel("Manage College Info",
+            DashBoardItemModel("Manage School Info",
                 Routes.ManageCollegeInfo.route),
         )
 
@@ -51,7 +46,7 @@ fun AdminDashBoard(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(title = {
-                    Text(text = "FACULTY DashBoard")
+                    Text(text = "TEACHER DASHBOARD")
                 },
                     /*colors = TopAppBarDefaults.largeTopAppBarColors(
                         containerColor = Purple80

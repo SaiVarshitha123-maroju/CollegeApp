@@ -134,14 +134,11 @@ fun ManageFaculty(navController: NavController) {
         }
     }
 
-
-
-
     Scaffold(
 
         topBar = {
             TopAppBar(title = {
-                Text(text = "Manage Faculty",
+                Text(text = "Manage Teachers",
                     color = Color.White
                 )
             },
@@ -153,8 +150,6 @@ fun ManageFaculty(navController: NavController) {
                             imageVector = Icons.Rounded.ArrowBack, contentDescription = null,
                             tint = Color.White
                         )
-
-
                     }
                 },
             )
@@ -169,7 +164,7 @@ fun ManageFaculty(navController: NavController) {
                     isCategory = true
                     isTeacher=false
                 }){
-                    Text(text="Add Category",
+                    Text(text="Add Class-Section",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(8.dp).fillMaxWidth(),
@@ -194,7 +189,7 @@ fun ManageFaculty(navController: NavController) {
                         category = it
                     },
                         placeholder = {
-                            Text(text = "Category...")},
+                            Text(text = "Class-Section...")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
@@ -204,7 +199,7 @@ fun ManageFaculty(navController: NavController) {
                         Button(onClick = {
 
                             if(category == "" ){
-                                Toast.makeText(context,"please provide category",
+                                Toast.makeText(context,"please provide Class-Section",
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
@@ -218,7 +213,7 @@ fun ManageFaculty(navController: NavController) {
                                 .padding(4.dp)
 
                         ) {
-                            Text(text = "Add Category")
+                            Text(text = "Add Class-Section")
 
                         }
 
@@ -283,7 +278,7 @@ fun ManageFaculty(navController: NavController) {
                         position = it
                     },
                         placeholder = {
-                            Text(text = "Position...")},
+                            Text(text = "Subject...")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
@@ -295,9 +290,9 @@ fun ManageFaculty(navController: NavController) {
                         },
                             readOnly = true,
                             placeholder = {
-                                Text(text = "Select your Department...")
+                                Text(text = "Select your Class...")
                             },
-                            label = { Text(text = "Department Name") },
+                            label = { Text(text = "Class-Section") },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp),

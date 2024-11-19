@@ -39,27 +39,27 @@ fun AboutUs() {
             // Displaying the college image, name, description, and website link
             Image(
                 painter = rememberAsyncImagePainter(model = info.imageUrl),
-                contentDescription = "College Image",
+                contentDescription = "School Image",
                 modifier = Modifier.height(220.dp).fillMaxWidth(),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = info.name ?: "College Name Not Available",
+                text = info.name ?: "School Name Not Available",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = info.desc ?: "College Description Not Available",
+                text = info.desc ?: "School Description Not Available",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = info.websiteLink ?: "College Website Not Available",
+                text = info.websiteLink ?: "School Website Link Not Available",
                 color = SkyBlue,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
@@ -67,7 +67,7 @@ fun AboutUs() {
             Spacer(modifier = Modifier.height(12.dp))
         } else {
             Text(
-                text = "College information not available.",
+                text = "School information not available.",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp

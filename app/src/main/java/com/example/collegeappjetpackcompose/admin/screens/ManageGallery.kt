@@ -124,7 +124,7 @@ fun ManageGallery(navController: NavController) {
 
         topBar = {
             TopAppBar(title = {
-                Text(text = "Manage Gallery",
+                Text(text = "Manage Events",
                     color = Color.White
                 )
             },
@@ -152,7 +152,7 @@ fun ManageGallery(navController: NavController) {
                     isCategory = true
                     isImage=false
                 }){
-                    Text(text="Add Category",
+                    Text(text="Add an Event",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(8.dp).fillMaxWidth(),
@@ -163,7 +163,7 @@ fun ManageGallery(navController: NavController) {
                     isImage = true
                     isCategory = false
                 }) {
-                    Text(text="Add Image",
+                    Text(text="Add Images",
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(8.dp)
@@ -177,7 +177,7 @@ fun ManageGallery(navController: NavController) {
                         category = it
                     },
                         placeholder = {
-                            Text(text = "Category...")},
+                            Text(text = "Event Name...")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
@@ -213,7 +213,7 @@ fun ManageGallery(navController: NavController) {
                                 .padding(4.dp)
 
                         ) {
-                            Text(text = "Add Category")
+                            Text(text = "Add Event")
 
                         }
 
@@ -242,7 +242,7 @@ fun ManageGallery(navController: NavController) {
                                 placeholder = {
                                     Text(text = "Select your Gallery...")
                                 },
-                                label = { Text(text = "Gallery Name") },
+                                label = { Text(text = "Select your Event Name") },
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(4.dp),

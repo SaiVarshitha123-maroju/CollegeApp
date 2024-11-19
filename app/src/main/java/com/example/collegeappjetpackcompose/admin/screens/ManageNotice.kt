@@ -94,6 +94,8 @@ fun ManageNotice(navController: NavController){
         if (isUploaded){
             Toast.makeText(context,"Notice Uploaded", Toast.LENGTH_SHORT).show()
             imageUri = null
+            title = "" // Reset the title
+            link = ""  // Reset the link
             isNotice = false
         }
     }
@@ -160,7 +162,7 @@ fun ManageNotice(navController: NavController){
                         link = it
                     },
                         placeholder = {
-                            Text(text = "Notice link")},
+                            Text(text = "Notice Description")},
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)

@@ -1,11 +1,8 @@
 package com.example.collegeappjetpackcompose.screens
+
 import com.example.collegeappjetpackcompose.R
-
-
-import android.widget.Gallery
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,9 +26,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -73,17 +68,13 @@ fun BottomNav(navController: NavController) {
             R.drawable.info,
         ),
         NavItem(
-            "Gallery",
+            "Events",
             R.drawable.gallery,
         ),
         NavItem(
             "Contact Us",
             R.drawable.write,
         ),
-        NavItem(
-            "Notice",
-            R.drawable.notification,
-    ),
     )
 
     ModalNavigationDrawer(drawerState = drawerState
@@ -121,8 +112,7 @@ fun BottomNav(navController: NavController) {
     } ,
         content = {
             Scaffold(
-
-                topBar = { TopAppBar(title = { Text(text = "College App") },
+                topBar = { TopAppBar(title = { Text(text = "BRIGHTPATH") },
                     navigationIcon = {
                         IconButton(onClick = {scope.launch{drawerState.open()} }) {
                             Icon(painter = painterResource(id = R.drawable.menu), contentDescription = null)
@@ -175,12 +165,12 @@ fun MyBottomNav(navController: NavController){
             Routes.Home.route
         ),
         BottomNavItem(
-            "Faculty",
+            "Teachers",
             R.drawable.faculty,
             Routes.Faculty.route
         ),
         BottomNavItem(
-            "Gallery",
+            "Events",
             R.drawable.gallery,
             Routes.Gallery.route
         ),
@@ -190,7 +180,7 @@ fun MyBottomNav(navController: NavController){
             Routes.AboutUs.route
         ),
         BottomNavItem(
-            "Assignments",
+            "Homeworks",
             R.drawable.homework,
             Routes.Assign.route
     )
@@ -220,9 +210,7 @@ fun MyBottomNav(navController: NavController){
                 icon = { Icon(painter = painterResource(id = it.icon), contentDescription = it.title,
                     modifier = Modifier.size(24.dp)
                 )
-
                 })
-
         }
     }
 }
