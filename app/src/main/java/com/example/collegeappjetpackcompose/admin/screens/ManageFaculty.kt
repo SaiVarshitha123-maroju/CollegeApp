@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -27,9 +26,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
@@ -54,26 +51,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil3.compose.rememberAsyncImagePainter
 import com.example.collegeappjetpackcompose.R
 import com.example.collegeappjetpackcompose.itemview.FacultyItemView
-import com.example.collegeappjetpackcompose.itemview.NoticeItemView
 import com.example.collegeappjetpackcompose.navigation.Routes
 import com.example.collegeappjetpackcompose.ui.theme.Purple40
 import com.example.collegeappjetpackcompose.utils.Constant
 import com.example.collegeappjetpackcompose.viewmodel.FacultyViewModel
-import com.example.collegeappjetpackcompose.viewmodel.NoticeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ManageFaculty(navController: NavController) {
     val context = LocalContext.current
+    val contentResolver = context.contentResolver
 
     val facultyViewModel : FacultyViewModel = viewModel()
 
@@ -336,19 +330,16 @@ fun ManageFaculty(navController: NavController) {
                     }
                     Row{
                         Button(onClick = {
-
-                            if(imageUri == null ){
-                                Toast.makeText(context,"please provide image",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }else if(name == "" || email=="" || position == ""||category==""){
-                                Toast.makeText(context,"please provide All Fields",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }else
-                                facultyViewModel.saveFaculty(imageUri!!, name, email,position,category)
-
-                        },
+                            val inputStreamProvider = {
+                                imageUri?.let { uri -> contentResolver.openInputStream(uri) }
+                            }
+                            facultyViewModel.saveFaculty(
+                                inputStream = inputStreamProvider,
+                                name = name,
+                                email = email,
+                                position = position,
+                                catName = category
+                            )},
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)

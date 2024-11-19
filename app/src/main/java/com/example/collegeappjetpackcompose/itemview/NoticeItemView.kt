@@ -1,5 +1,6 @@
 package com.example.collegeappjetpackcompose.itemview
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -25,7 +26,6 @@ import com.example.collegeappjetpackcompose.ui.theme.SkyBlue
 import com.example.collegeappjetpackcompose.ui.theme.TITLE_SIZE
 import com.example.collegeappjetpackcompose.utils.Constant.isAdmin
 
-
 @Composable
 fun NoticeItemView(noticeModel: NoticeModel,
                    delete:(noticeModel: NoticeModel)->Unit) {
@@ -35,8 +35,6 @@ fun NoticeItemView(noticeModel: NoticeModel,
 
              val (image, delete) = createRefs()
 
-
-
              Column {
                  Text(
                      text = noticeModel.title!!,
@@ -45,20 +43,26 @@ fun NoticeItemView(noticeModel: NoticeModel,
                      fontSize = 16.sp
                  )
                  if (noticeModel.link != "")
-                 Text(
-                     text = noticeModel.link!!,
-                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                     fontSize = 14.sp,
-                     color = SkyBlue
-                 )
+                     Text(
+                         text = noticeModel.link!!,
+                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                         fontSize = 14.sp,
+                         color = SkyBlue
+                     )
                  Image(
-                     painter = rememberAsyncImagePainter(model = noticeModel.imageUrl),
+                     painter = rememberAsyncImagePainter(
+                         model = noticeModel.imageUrl,
+                         placeholder = painterResource(R.drawable.image_placeholder),
+                         error = painterResource(R.drawable.img)
+                     )
+                     ,
                      contentDescription = null,
                      modifier = Modifier
                          .height(220.dp)
                          .fillMaxWidth(),
                      contentScale = ContentScale.Crop
                  )
+                 Log.d("NoticeImageURL", "URL: ${noticeModel.imageUrl}")
              }
              
              if(isAdmin)
@@ -72,19 +76,12 @@ fun NoticeItemView(noticeModel: NoticeModel,
                      delete(noticeModel)
                  }
 
-
              ) {
                  Image(painter = painterResource(id = R.drawable.delete),
                      contentDescription = null,
                      modifier = Modifier.padding(8.dp)
                  )
              }
-
-
-
-
          }
-
-
     }
 }

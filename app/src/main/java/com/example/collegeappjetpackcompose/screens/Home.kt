@@ -44,7 +44,7 @@ fun Home() {
     bannerViewModel.getBanner()
 
     val collegeInfo by collegeInfoViewModel.collegeInfo.observeAsState(null)
-    // collegeInfoViewModel.getCollegeInfo()
+    //collegeInfoViewModel.getCollegeInfo()
 
     val noticeViewModel : NoticeViewModel = viewModel()
     val noticeList by noticeViewModel.noticeList.observeAsState(null)

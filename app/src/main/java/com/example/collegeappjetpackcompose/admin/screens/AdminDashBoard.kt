@@ -41,6 +41,8 @@ fun AdminDashBoard(navController: NavController) {
                 Routes.ManageFaculty.route),
             DashBoardItemModel("Manage Gallery",
                 Routes.ManageGallery.route),
+            DashBoardItemModel("Manage Assignments",
+                Routes.ManageAssign.route),
             DashBoardItemModel("Manage College Info",
                 Routes.ManageCollegeInfo.route),
         )
@@ -49,7 +51,7 @@ fun AdminDashBoard(navController: NavController) {
         Scaffold(
             topBar = {
                 TopAppBar(title = {
-                    Text(text = "Admin DashBoard")
+                    Text(text = "FACULTY DashBoard")
                 },
                     /*colors = TopAppBarDefaults.largeTopAppBarColors(
                         containerColor = Purple80

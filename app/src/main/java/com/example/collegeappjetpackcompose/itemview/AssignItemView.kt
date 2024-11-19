@@ -1,87 +1,95 @@
 package com.example.collegeappjetpackcompose.itemview
 
-import android.util.Log
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import com.example.collegeappjetpackcompose.utils.Constant.isAdmin
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil3.compose.rememberAsyncImagePainter
-
 import com.example.collegeappjetpackcompose.R
-import com.example.collegeappjetpackcompose.models.NoticeModel
+import com.example.collegeappjetpackcompose.models.AssignModel
 import com.example.collegeappjetpackcompose.ui.theme.SkyBlue
-import com.example.collegeappjetpackcompose.ui.theme.TITLE_SIZE
-import com.example.collegeappjetpackcompose.utils.Constant.isAdmin
 
 @Composable
-fun NoticeItemView(noticeModel: NoticeModel,
-                   delete:(noticeModel: NoticeModel)->Unit) {
+fun AssignItemView(
+    noticeModel: AssignModel,
+    delete: (noticeModel: AssignModel) -> Unit
+) {
+    val context = LocalContext.current
 
     OutlinedCard(modifier = Modifier.padding(4.dp)) {
-         ConstraintLayout {
+        ConstraintLayout {
+            val (title, link, deleteBtn) = createRefs()
 
-             val (image, delete) = createRefs()
+            Column(
+                modifier = Modifier
+                    .constrainAs(title) {
+                        start.linkTo(parent.start)
+                        top.linkTo(parent.top)
+                    }
+                    .padding(12.dp)
+            ) {
+                Text(
+                    text = noticeModel.fileTitle ?: "No Title",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
 
-             Column {
-                 Text(
-                     text = noticeModel.title!!,
-                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                     fontWeight = FontWeight.Bold,
-                     fontSize = 16.sp
-                 )
-                 if (noticeModel.link != "")
-                     Text(
-                         text = noticeModel.link!!,
-                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                         fontSize = 14.sp,
-                         color = SkyBlue
-                     )
-                 Image(
-                     painter = rememberAsyncImagePainter(
-                         model = noticeModel.imageUrl,
-                         placeholder = painterResource(R.drawable.image_placeholder),
-                         error = painterResource(R.drawable.img)
-                     )
-                     ,
-                     contentDescription = null,
-                     modifier = Modifier
-                         .height(220.dp)
-                         .fillMaxWidth(),
-                     contentScale = ContentScale.Crop
-                 )
-                 Log.d("NoticeImageURL", "URL: ${noticeModel.imageUrl}")
-             }
-             
-             if(isAdmin)
-             Card(modifier = Modifier
-                 .constrainAs(delete) {
-                     top.linkTo(parent.top)
-                     end.linkTo(parent.end)
-                 }
-                 .padding(4.dp)
-                 .clickable {
-                     delete(noticeModel)
-                 }
+                if (!noticeModel.fileUrl.isNullOrEmpty()) {
+                    Text(
+                        text = "Download/View File",
+                        color = SkyBlue,
+                        fontSize = 14.sp,
+                        modifier = Modifier
+                            .clickable {
+                                val uri = Uri.parse(noticeModel.fileUrl)
+                                val intent = Intent(Intent.ACTION_VIEW, uri)
+                                context.startActivity(intent)
+                            }
+                            .padding(vertical = 4.dp)
+                    )
+                } else {
+                    Text(
+                        text = "No file attached",
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                }
+            }
 
-             ) {
-                 Image(painter = painterResource(id = R.drawable.delete),
-                     contentDescription = null,
-                     modifier = Modifier.padding(8.dp)
-                 )
-             }
-         }
+            if (isAdmin) { // Check admin status dynamically
+                Card(
+                    modifier = Modifier
+                        .constrainAs(deleteBtn) {
+                            top.linkTo(parent.top)
+                            end.linkTo(parent.end)
+                        }
+                        .padding(8.dp)
+                        .clickable {
+                            delete(noticeModel)
+                        }
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.delete),
+                        contentDescription = null,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
+        }
     }
 }

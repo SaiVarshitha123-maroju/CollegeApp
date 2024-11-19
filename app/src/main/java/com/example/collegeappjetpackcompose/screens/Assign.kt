@@ -8,22 +8,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.collegeappjetpackcompose.itemview.AssignItemView
 import com.example.collegeappjetpackcompose.itemview.GalleryItemView
+import com.example.collegeappjetpackcompose.viewmodel.AssignViewModel
 import com.example.collegeappjetpackcompose.viewmodel.GalleryViewModel
 
 @Composable
-fun Gallery() {
+fun Assign() {
 
-    val galleryViewModel : GalleryViewModel = viewModel()
-    val galleryList by galleryViewModel.galleryList.observeAsState(null)
-    galleryViewModel.getGallery()
+    // ViewModel for handling assignments
+    val assignViewModel: AssignViewModel = viewModel()
+    val assignmentList by assignViewModel.noticeList.observeAsState(emptyList()) // Get assignments list
+    assignViewModel.getAssignments() // Fetch assignments
 
+    // LazyColumn to display assignments
     LazyColumn {
-        items(galleryList?: emptyList()){
-            GalleryItemView (it, delete = { docId ->
-                galleryViewModel.deleteGallery(docId)
-            }, deleteImage = {cat,imageUrl->
-                galleryViewModel.deleteImage(cat,imageUrl)
+        items(assignmentList) { assignment ->
+            AssignItemView(assignment, delete = {
+                // Delete the assignment when called
+                assignViewModel.deleteAssignment(assignment)
             })
         }
     }

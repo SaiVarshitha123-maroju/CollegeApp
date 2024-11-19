@@ -16,24 +16,23 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.InputStream
+import com.example.collegeappjetpackcompose.models.AssignModel
 
-class NoticeViewModel: ViewModel() {
+class AssignViewModel: ViewModel() {
 
-    private val noticeRef = Firebase.firestore.collection(NOTICE)
-
-    private  val storageRef = Firebase.storage.reference
+    private val noticeRef = Firebase.firestore.collection("assignments")
 
     private val _isPosted = MutableLiveData<Boolean>()
-    val isPosted : LiveData<Boolean> = _isPosted
+    val isPosted: LiveData<Boolean> = _isPosted
 
     private val _isDeleted = MutableLiveData<Boolean>()
-    val isDeleted : LiveData<Boolean> = _isDeleted
+    val isDeleted: LiveData<Boolean> = _isDeleted
 
-    private val _noticeList = MutableLiveData<List<NoticeModel>>()
-    val noticeList : LiveData<List<NoticeModel>> = _noticeList
+    private val _noticeList = MutableLiveData<List<AssignModel>>()
+    val noticeList: LiveData<List<AssignModel>> = _noticeList
 
-    private val cloudinary: Cloudinary = Cloudinary(
-        mapOf<String, Any>(
+    private val cloudinary = Cloudinary(
+        mapOf(
             "cloud_name" to "dgzmk54lv",
             "api_key" to "538971727338748",
             "api_secret" to "_JBj2M9zFwPSktX9KxNTOsqiD2c",
@@ -41,9 +40,8 @@ class NoticeViewModel: ViewModel() {
         )
     )
 
-    fun saveNotice(inputStream: InputStream?, title: String, link: String) {
-        _isPosted.postValue(false)
-        if (inputStream == null) {
+    fun saveAssignment(inputStream: InputStream?, title: String) {
+        if (inputStream == null || title.isEmpty()) {
             _isPosted.postValue(false)
             return
         }
@@ -52,13 +50,17 @@ class NoticeViewModel: ViewModel() {
             try {
                 val uploadResult = cloudinary.uploader().upload(
                     inputStream,
-                    ObjectUtils.asMap("folder", "notices/",
-                        "secure", true )
+                    ObjectUtils.asMap(
+                        "resource_type", "raw",
+                        "folder", "assignments/",
+                        "public_id", title,
+                        "secure", true
+                    )
                 )
 
-                val imageUrl = uploadResult["url"] as String
-                val randomUid = UUID.randomUUID().toString()
-                uploadNotice(imageUrl, randomUid, title, link)
+                val fileUrl = uploadResult["secure_url"] as String
+                val docId = UUID.randomUUID().toString()
+                uploadAssignment(fileUrl, docId, title)
             } catch (e: Exception) {
                 e.printStackTrace()
                 _isPosted.postValue(false)
@@ -66,39 +68,32 @@ class NoticeViewModel: ViewModel() {
         }
     }
 
-
-
-
-    private fun uploadNotice(imageUrl: String, docId: String, title: String, link: String) {
-        val map = mutableMapOf(
-            "imageUrl" to imageUrl,
-            "docId" to docId,
-            "title" to title,
-            "link" to link
+    private fun uploadAssignment(fileUrl: String, docId: String, title: String) {
+        val map = mapOf(
+            "fileUrl" to fileUrl,
+            "fileTitle" to title,
+            "docId" to docId
         )
 
         noticeRef.document(docId).set(map)
-            .addOnSuccessListener { _isPosted.postValue(true) }
+            .addOnSuccessListener { _isPosted.postValue(true)
+                getAssignments() }
             .addOnFailureListener { _isPosted.postValue(false) }
     }
 
-    fun getNotice() {
+    fun getAssignments() {
         noticeRef.get().addOnSuccessListener { querySnapshot ->
-            val list = querySnapshot.map { doc -> doc.toObject(NoticeModel::class.java) }
+            val list = querySnapshot.map { doc -> doc.toObject(AssignModel::class.java) }
             _noticeList.postValue(list)
         }
     }
 
-    fun deleteNotice(noticeModel: NoticeModel) {
-        if (noticeModel.docId == null || noticeModel.imageUrl == null) {
-            _isDeleted.postValue(false)
-            return
-        }
-        noticeRef.document(noticeModel.docId).delete()
+    fun deleteAssignment(noticeModel: AssignModel) {
+        noticeRef.document(noticeModel.docId ?: return).delete()
             .addOnSuccessListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
-                        val uri = Uri.parse(noticeModel.imageUrl)
+                        val uri = Uri.parse(noticeModel.fileUrl)
                         val publicId = uri.lastPathSegment?.substringBefore(".") ?: ""
                         cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap())
                         _isDeleted.postValue(true)
@@ -110,6 +105,5 @@ class NoticeViewModel: ViewModel() {
             }
             .addOnFailureListener { _isDeleted.postValue(false) }
     }
-
 
 }

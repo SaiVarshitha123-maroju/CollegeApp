@@ -75,6 +75,9 @@ fun ManageBanner(navController: NavController) {
         imageUri = it
 
     }
+    val inputStream = imageUri?.let { uri ->
+        context.contentResolver.openInputStream(uri)
+    }
 
     LaunchedEffect(isUploaded) {
             if (isUploaded){
@@ -128,29 +131,26 @@ fun ManageBanner(navController: NavController) {
 
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
+            if(imageUri != null) {
 
+                ElevatedCard(modifier = Modifier.padding(8.dp)) {
 
+                    Image(
+                        painter = rememberAsyncImagePainter(model = imageUri),
 
-            if(imageUri != null)
-
-            ElevatedCard(modifier = Modifier.padding(8.dp)) {
-                
-                Image(
-                    painter = rememberAsyncImagePainter(model = imageUri),
-
-                    contentDescription = BANNER,
-                    modifier = Modifier
-                        .height(220.dp)
-                        .fillMaxWidth(),
+                        contentDescription = BANNER,
+                        modifier = Modifier
+                            .height(220.dp)
+                            .fillMaxWidth(),
                         contentScale = ContentScale.Crop
-                )
+                    )
 
-                    Row{
-                        Button(onClick = {
+                    Row {
+                        Button(
+                            onClick = {
+                                inputStream?.let { bannerViewModel.saveImage(it) }
 
-                                        bannerViewModel.saveImage(imageUri!!)
-
-                        },
+                            },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f)
@@ -159,20 +159,22 @@ fun ManageBanner(navController: NavController) {
                         ) {
                             Text(text = "Add image")
 
-                    }
+                        }
 
-                        OutlinedButton(onClick = { imageUri = null },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f)
-                            .padding(4.dp)
+                        OutlinedButton(
+                            onClick = { imageUri = null },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f)
+                                .padding(4.dp)
 
                         ) {
-                        Text(text = "Cancel")
+                            Text(text = "Cancel")
 
+                        }
                     }
-                }
 
+                }
             }
 
 
@@ -186,7 +188,6 @@ fun ManageBanner(navController: NavController) {
         }
     }
 }
-
 
 @Preview(showSystemUi = true)
 @Composable

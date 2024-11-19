@@ -1,8 +1,7 @@
 package com.example.collegeappjetpackcompose.models
 
-data class NoticeModel(
-    val imageUrl : String? = "",
-    val title :String? = "",
-    val link : String? = "",
-    val docId : String? = ""
+data class AssignModel(
+    val fileUrl: String? = "", // URL for the uploaded file
+    val fileTitle: String? = "", // Title of the file
+    val docId: String? = "" // Firebase document ID
 )

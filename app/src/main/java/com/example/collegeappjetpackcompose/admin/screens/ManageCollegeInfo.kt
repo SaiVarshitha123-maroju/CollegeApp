@@ -48,6 +48,7 @@ import com.example.collegeappjetpackcompose.viewmodel.CollegeInfoViewModel
 @Composable
 fun ManageCollegeInfo(navController: NavController) {
     val context = LocalContext.current
+    val contentResolver = context.contentResolver
 
     val collegeInfoViewModel : CollegeInfoViewModel = viewModel()
 
@@ -56,7 +57,7 @@ fun ManageCollegeInfo(navController: NavController) {
     val collegeInfo by collegeInfoViewModel.collegeInfo.observeAsState(null)
 
 
-   // collegeInfoViewModel.getCollegeInfo()
+   //collegeInfoViewModel.getCollegeInfo()
 
     var imageUri by remember {
         mutableStateOf<Uri?>(null)
@@ -171,10 +172,6 @@ fun ManageCollegeInfo(navController: NavController) {
                             .padding(4.dp)
 
                     )
-
-
-
-
                     Image(
                         painter = if(imageUrl!="") rememberAsyncImagePainter(model = imageUrl) else if (imageUri == null) painterResource(id = R.drawable.image_placeholder)
                         else rememberAsyncImagePainter(model = imageUri),
@@ -202,10 +199,21 @@ fun ManageCollegeInfo(navController: NavController) {
                                 Toast.makeText(context,"please provide image",
                                     Toast.LENGTH_SHORT
                                 ).show()
+                            }else {
+                                collegeInfoViewModel.saveImage(
+                                    inputStream = {
+                                        imageUri?.let {
+                                            contentResolver.openInputStream(
+                                                it
+                                            )
+                                        }
+                                    },
+                                    name = title,
+                                    address = address,
+                                    desc = desc,
+                                    websiteLink = link
+                                )
                             }
-                                else
-                                collegeInfoViewModel.saveImage(imageUri!!, title,address,desc, link)
-
                         },
                             modifier = Modifier
                                 .fillMaxWidth()

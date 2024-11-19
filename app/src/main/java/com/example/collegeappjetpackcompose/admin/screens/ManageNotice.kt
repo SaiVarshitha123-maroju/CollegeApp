@@ -65,7 +65,6 @@ fun ManageNotice(navController: NavController){
     val isDeleted by noticeViewModel.isDeleted.observeAsState(false)
     val bannerList by noticeViewModel.noticeList.observeAsState(null)
 
-
     noticeViewModel.getNotice()
 
     var imageUri by remember {
@@ -124,8 +123,6 @@ fun ManageNotice(navController: NavController){
                             imageVector = Icons.Rounded.ArrowBack, contentDescription = null,
                             tint = Color.White
                         )
-
-
                     }
                 },
             )
@@ -146,11 +143,7 @@ fun ManageNotice(navController: NavController){
 
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
-
-
-
             if(isNotice)
-
                 ElevatedCard(modifier = Modifier.padding(8.dp)) {
 
                     OutlinedTextField(value = title, onValueChange = {
@@ -161,7 +154,6 @@ fun ManageNotice(navController: NavController){
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(4.dp)
-
                     )
 
                     OutlinedTextField(value = link, onValueChange = {
@@ -174,9 +166,6 @@ fun ManageNotice(navController: NavController){
                             .padding(4.dp)
 
                     )
-
-
-
 
                     Image(
                         painter = if (imageUri == null) painterResource(id = R.drawable.image_placeholder)
@@ -191,21 +180,25 @@ fun ManageNotice(navController: NavController){
                             },
                         contentScale = ContentScale.Crop
                     )
-
                     Row{
                         Button(onClick = {
-
-                            if(imageUri == null ){
-                                Toast.makeText(context,"please provide image",
+                            if (imageUri == null) {
+                                Toast.makeText(
+                                    context,
+                                    "Please provide an image",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            }else if(title == ""){
-                                Toast.makeText(context,"please provide title",
+                            } else if (title.isEmpty()) {
+                                Toast.makeText(
+                                    context,
+                                    "Please provide a title",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                            }else
-                                noticeViewModel.saveNotice(imageUri!!, title, link)
-
+                            } else {
+                                val inputStream =
+                                    context.contentResolver.openInputStream(imageUri!!)
+                                noticeViewModel.saveNotice(inputStream, title, link)
+                            }
                         },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -232,12 +225,15 @@ fun ManageNotice(navController: NavController){
 
                 }
 
-
-            LazyColumn {
-                items(bannerList?: emptyList()){
-                    NoticeItemView(it, delete = { docId ->
-                        noticeViewModel.deleteNotice(docId)
-                    })
+            if (bannerList.isNullOrEmpty()) {
+                Text(text = "No notices available", modifier = Modifier.padding(16.dp))
+            } else {
+                LazyColumn {
+                    items(bannerList?: emptyList()){
+                        NoticeItemView(it, delete = { docId ->
+                            noticeViewModel.deleteNotice(docId)
+                        })
+                    }
                 }
             }
         }

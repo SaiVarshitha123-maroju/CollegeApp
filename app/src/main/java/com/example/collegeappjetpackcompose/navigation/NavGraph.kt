@@ -10,8 +10,10 @@ import com.example.collegeappjetpackcompose.admin.screens.ManageBanner
 import com.example.collegeappjetpackcompose.admin.screens.ManageCollegeInfo
 import com.example.collegeappjetpackcompose.admin.screens.ManageFaculty
 import com.example.collegeappjetpackcompose.admin.screens.ManageGallery
+import com.example.collegeappjetpackcompose.admin.screens.ManageAssign
 import com.example.collegeappjetpackcompose.admin.screens.ManageNotice
 import com.example.collegeappjetpackcompose.screens.AboutUs
+import com.example.collegeappjetpackcompose.screens.Assign
 import com.example.collegeappjetpackcompose.screens.BottomNav
 import com.example.collegeappjetpackcompose.screens.Faculty
 import com.example.collegeappjetpackcompose.screens.Gallery
@@ -37,6 +39,9 @@ fun NavGraph(navController: NavHostController) {
         composable(Routes.AboutUs.route){
             AboutUs()
         }
+        composable(Routes.Assign.route){
+            Assign()
+        }
 
         composable(Routes.Gallery.route){
             Gallery()
@@ -56,7 +61,9 @@ fun NavGraph(navController: NavHostController) {
         composable(Routes.ManageNotice.route){
             ManageNotice(navController)
         }
-
+        composable(Routes.ManageAssign.route) {
+            ManageAssign(navController)
+        }
         composable(Routes.ManageFaculty.route){
             ManageFaculty(navController)
         }
@@ -72,8 +79,5 @@ fun NavGraph(navController: NavHostController) {
         composable(Routes.ManageGallery.route){
             ManageGallery(navController)
         }
-
-
-
     }
 }

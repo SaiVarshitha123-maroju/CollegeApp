@@ -10,12 +10,15 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.collegeappjetpackcompose.models.BannerModel
 
 import com.example.collegeappjetpackcompose.R
@@ -27,18 +30,23 @@ fun BannerItemView(bannerModel: BannerModel,
 
     OutlinedCard(modifier = Modifier.padding(4.dp)) {
          ConstraintLayout {
-
              val (image, delete) = createRefs()
 
-            Image(painter = rememberAsyncImagePainter(model = bannerModel.url),
-                contentDescription = null,
-                modifier = Modifier
-                    .height(220.dp)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.Crop
-            )
-             
-             
+             Image(
+                 painter = rememberAsyncImagePainter(
+                     model = ImageRequest.Builder(LocalContext.current)
+                         .data(bannerModel.url)
+                         .crossfade(true) // Smooth transition
+                         .build()
+                 ),
+                 contentDescription = null,
+                 modifier = Modifier
+                     .height(220.dp)
+                     .fillMaxWidth(),
+                 contentScale = ContentScale.Crop
+             )
+
+
              Card(modifier = Modifier.constrainAs(delete){
                  top.linkTo(parent.top)
                  end.linkTo(parent.end)
@@ -46,21 +54,13 @@ fun BannerItemView(bannerModel: BannerModel,
                  .clickable {
                      delete(bannerModel)
                  }
-
-
              ) {
                  Image(painter = painterResource(id = R.drawable.delete),
                      contentDescription = null,
                      modifier = Modifier.padding(8.dp)
                  )
              }
-
-
-
-
          }
-
-
     }
 }
 

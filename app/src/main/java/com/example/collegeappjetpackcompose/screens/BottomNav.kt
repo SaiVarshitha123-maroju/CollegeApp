@@ -137,7 +137,8 @@ fun BottomNav(navController: NavController) {
             ) {padding ->
                 NavHost(navController = navController1,
                     startDestination = Routes.Home.route,
-                    modifier =  Modifier.padding(padding)){
+                    modifier =  Modifier.padding(padding))
+                {
                     composable(route = Routes.Home.route){
                         Home()
                     }
@@ -152,6 +153,9 @@ fun BottomNav(navController: NavController) {
 
                     composable(Routes.Faculty.route){
                         Faculty(navController)
+                    }
+                    composable(Routes.Assign.route){
+                        Assign()
                     }
                 }
                 
@@ -184,7 +188,12 @@ fun MyBottomNav(navController: NavController){
             "About Us",
             R.drawable.info,
             Routes.AboutUs.route
-        )
+        ),
+        BottomNavItem(
+            "Assignments",
+            R.drawable.homework,
+            Routes.Assign.route
+    )
     )
 
 

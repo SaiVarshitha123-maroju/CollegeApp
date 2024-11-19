@@ -85,11 +85,13 @@ dependencies {
     //coil
     implementation(libs.coil.compose)
 
+
     //implementation("androidx.compose.runtime:runtime-livedata:1.7.5")
 
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     implementation ("com.google.accompanist:accompanist-pager:0.28.0")
     implementation ("com.google.accompanist:accompanist-pager-indicators:0.28.0")
+    implementation ("com.cloudinary:cloudinary-android:3.0.2")
 
 }

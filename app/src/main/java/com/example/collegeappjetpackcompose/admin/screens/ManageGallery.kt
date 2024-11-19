@@ -13,11 +13,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
@@ -44,7 +42,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -57,12 +54,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.rememberAsyncImagePainter
 import com.example.collegeappjetpackcompose.R
-import com.example.collegeappjetpackcompose.itemview.FacultyItemView
 import com.example.collegeappjetpackcompose.itemview.GalleryItemView
-import com.example.collegeappjetpackcompose.navigation.Routes
 import com.example.collegeappjetpackcompose.ui.theme.Purple40
-import com.example.collegeappjetpackcompose.utils.Constant
-import com.example.collegeappjetpackcompose.viewmodel.FacultyViewModel
 import com.example.collegeappjetpackcompose.viewmodel.GalleryViewModel
 import kotlin.collections.isNotEmpty
 
@@ -204,15 +197,15 @@ fun ManageGallery(navController: NavController) {
                         contentScale = ContentScale.Crop
                     )
                     Row{
-                        Button(onClick = {
-                            if(category == ""&&imageUri == null ){
-                                Toast.makeText(context,"please provide all fields",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                        Button(onClick ={
+                            if (imageUri == null) {
+                                Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+                            } else if (category.isEmpty()) {
+                                Toast.makeText(context, "Please provide a category name", Toast.LENGTH_SHORT).show()
+                            } else {
+                                val inputStream = context.contentResolver.openInputStream(imageUri!!)
+                                galleryViewModel.saveGalleryImage(inputStream, category, true)
                             }
-                            else
-                                galleryViewModel.saveGalleryImage(imageUri!!,category,true)
-
                         },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -299,19 +292,15 @@ fun ManageGallery(navController: NavController) {
                     Spacer(modifier = Modifier.height(5.dp))
 
                     Row{
-                        Button(onClick = {
-
-                            if(imageUri == null ){
-                                Toast.makeText(context,"please provide image",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }else if(category==""){
-                                Toast.makeText(context,"please provide Category",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }else
-                                galleryViewModel.saveGalleryImage(imageUri!!,category,false)
-
+                        Button( onClick ={
+                                if (imageUri == null) {
+                                    Toast.makeText(context, "Please select an image", Toast.LENGTH_SHORT).show()
+                                } else if (category.isEmpty()) {
+                                    Toast.makeText(context, "Please provide a category name", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    val inputStream = context.contentResolver.openInputStream(imageUri!!)
+                                    galleryViewModel.saveGalleryImage(inputStream, category, false)
+                                }
                         },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -351,4 +340,3 @@ fun ManageGallery(navController: NavController) {
         }
     }
 }
-
