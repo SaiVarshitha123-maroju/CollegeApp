@@ -45,7 +45,8 @@ class CollegeInfoViewModel: ViewModel() {
                     stream,
                     ObjectUtils.asMap("folder", "college_info/")
                 )
-                val imageUrl = uploadResult["url"] as String
+                var imageUrl = uploadResult["url"] as String
+                imageUrl = imageUrl.replace("http://", "https://")
                 uploadImage(imageUrl, name, address, desc, websiteLink)
             } catch (e: Exception) {
                 _isPosted.postValue(false)
@@ -73,6 +74,7 @@ class CollegeInfoViewModel: ViewModel() {
         collegeInfoRef.document("collegeDetails").get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
+                    Log.d("Firestore Data", document.data.toString())
                     _collegeInfo.postValue(
                         listOf(
                             CollegeInfoModel(
@@ -92,6 +94,4 @@ class CollegeInfoViewModel: ViewModel() {
                 _collegeInfo.postValue(emptyList()) // Handle failure
             }
     }
-
-
 }

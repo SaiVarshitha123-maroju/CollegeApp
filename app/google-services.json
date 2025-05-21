@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "877926264609",
-    "project_id": "collegeapp-34f99",
-    "storage_bucket": "collegeapp-34f99.firebasestorage.app"
+    "project_number": "951622126364",
+    "project_id": "schoolportal-67552",
+    "storage_bucket": "schoolportal-67552.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:877926264609:android:f2ab12f80d671caec95860",
+        "mobilesdk_app_id": "1:951622126364:android:80f687ed46c9f1db5d88d9",
         "android_client_info": {
           "package_name": "com.example.collegeappjetpackcompose"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "dummykey"
+          "current_key": "AIzaSyAoH5LPnxRhL7Cdx_4wY2s2ngzlp8vt86Q"
         }
       ],
       "services": {

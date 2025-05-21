@@ -21,8 +21,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil3.compose.rememberAsyncImagePainter
 import com.example.collegeappjetpackcompose.R
 import com.example.collegeappjetpackcompose.models.NoticeModel
-import com.example.collegeappjetpackcompose.ui.theme.SkyBlue
-import com.example.collegeappjetpackcompose.utils.Constant.isAdmin
 
 @Composable
 fun NoticeItemView(noticeModel: NoticeModel,
@@ -44,8 +42,25 @@ fun NoticeItemView(noticeModel: NoticeModel,
                      Text(
                          text = noticeModel.link!!,
                          modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                         fontSize = 14.sp,
-                         color = SkyBlue
+                         fontSize = 14.sp
+                     )
+                 if (noticeModel.date.toString() != "")
+                     Text(
+                         text = noticeModel.date.toString(),
+                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                         fontSize = 14.sp
+                     )
+                 if (noticeModel.time.toString() != "")
+                     Text(
+                         text = noticeModel.time.toString(),
+                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                         fontSize = 14.sp
+                     )
+                 if (noticeModel.venue != "")
+                     Text(
+                         text = noticeModel.venue!!,
+                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                         fontSize = 14.sp
                      )
                  Image(
                      painter = rememberAsyncImagePainter(
@@ -61,8 +76,7 @@ fun NoticeItemView(noticeModel: NoticeModel,
                  )
                  Log.d("NoticeImageURL", "URL: ${noticeModel.imageUrl}")
              }
-             
-             if(isAdmin)
+
              Card(modifier = Modifier
                  .constrainAs(delete) {
                      top.linkTo(parent.top)

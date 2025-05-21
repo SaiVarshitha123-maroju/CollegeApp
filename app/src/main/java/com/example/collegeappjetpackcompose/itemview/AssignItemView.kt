@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import com.example.collegeappjetpackcompose.utils.Constant.isAdmin
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedCard
@@ -71,7 +70,7 @@ fun AssignItemView(
                 }
             }
 
-            if (isAdmin) { // Check admin status dynamically
+           // Check admin status dynamically
                 Card(
                     modifier = Modifier
                         .constrainAs(deleteBtn) {
@@ -89,7 +88,7 @@ fun AssignItemView(
                         modifier = Modifier.padding(8.dp)
                     )
                 }
-            }
+
         }
     }
 }

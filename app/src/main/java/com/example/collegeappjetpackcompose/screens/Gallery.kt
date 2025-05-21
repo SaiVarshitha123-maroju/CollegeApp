@@ -7,6 +7,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.collegeappjetpackcompose.itemview.GalleryItemView
 import com.example.collegeappjetpackcompose.viewmodel.GalleryViewModel
@@ -15,13 +16,14 @@ import com.example.collegeappjetpackcompose.viewmodel.GalleryViewModel
 fun Gallery() {
 
     val galleryViewModel : GalleryViewModel = viewModel()
+    val context = LocalContext.current
     val galleryList by galleryViewModel.galleryList.observeAsState(null)
     galleryViewModel.getGallery()
 
     LazyColumn {
         items(galleryList?: emptyList()){
             GalleryItemView (it, delete = { docId ->
-                galleryViewModel.deleteGallery(docId)
+                galleryViewModel.deleteGallery(docId, context )
             }, deleteImage = {cat,imageUrl->
                 galleryViewModel.deleteImage(cat,imageUrl)
             })

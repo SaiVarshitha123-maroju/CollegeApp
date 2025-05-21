@@ -51,7 +51,8 @@ class BannerViewModel: ViewModel() {
                     ObjectUtils.asMap("folder", "banners/")
                 )
 
-                val imageUrl = uploadResult["url"] as String
+                var imageUrl = uploadResult["url"] as String
+                imageUrl = imageUrl.replace("http://", "https://")
                 val randomUid = UUID.randomUUID().toString()
                 uploadImage(imageUrl, randomUid)
             } catch (e: Exception) {

@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.collegeappjetpackcompose"
-        minSdk = 24
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -40,7 +40,9 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
@@ -53,6 +55,10 @@ android {
 }
 
 dependencies {
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.firebase:firebase-auth:21.3.0")
+    implementation("com.google.firebase:firebase-firestore:24.7.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -68,6 +74,7 @@ dependencies {
     implementation(libs.firebase.storage.ktx)
     implementation(libs.identity.jvm)
     implementation(libs.androidx.runtime.livedata)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,6 +90,8 @@ dependencies {
     //implementation("com.google.firebase:firebase-storage")
 
     //coil
+    implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
     implementation(libs.coil.compose)
 
 

@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="CollegeAppJetpackCompose.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-18T13:56:28.190471800Z">
+        <DropdownSelection timestamp="2024-12-23T14:48:34.311878300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\lenovo user\.android\avd\Medium_Phone.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=8X9TIZHIAQDEJRLF" />
             </handle>
           </Target>
         </DropdownSelection>

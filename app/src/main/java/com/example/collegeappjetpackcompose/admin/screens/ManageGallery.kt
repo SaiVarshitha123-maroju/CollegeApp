@@ -331,7 +331,7 @@ fun ManageGallery(navController: NavController) {
             LazyColumn {
                 items(galleryList?: emptyList()){
                     GalleryItemView (it, delete = { docId ->
-                        galleryViewModel.deleteGallery(docId)
+                        galleryViewModel.deleteGallery(docId, context )
                     }, deleteImage = {cat,imageUrl->
                         galleryViewModel.deleteImage(cat,imageUrl)
                     })

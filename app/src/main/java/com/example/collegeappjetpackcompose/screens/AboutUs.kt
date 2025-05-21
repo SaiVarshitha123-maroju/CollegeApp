@@ -27,7 +27,7 @@ fun AboutUs() {
     val collegeInfoViewModel: CollegeInfoViewModel = viewModel()
     // Calling getCollegeInfo to fetch the college info if it hasn't been fetched already
     LaunchedEffect(Unit) {
-        collegeInfoViewModel.getCollegeInfo()
+       collegeInfoViewModel.getCollegeInfo()
     }
 
     val collegeInfo by collegeInfoViewModel.collegeInfo.observeAsState(emptyList())
@@ -46,14 +46,14 @@ fun AboutUs() {
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = info.name ?: "School Name Not Available",
-                color = Color.White,
+                color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = info.desc ?: "School Description Not Available",
-                color = Color.White,
+                color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )
@@ -68,7 +68,7 @@ fun AboutUs() {
         } else {
             Text(
                 text = "School information not available.",
-                color = Color.White,
+                color = Color.Black,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp
             )

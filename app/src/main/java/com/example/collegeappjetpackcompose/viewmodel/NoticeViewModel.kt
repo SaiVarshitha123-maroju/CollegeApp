@@ -9,19 +9,18 @@ import com.example.collegeappjetpackcompose.models.NoticeModel
 import com.example.collegeappjetpackcompose.utils.Constant.NOTICE
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.google.firebase.storage.storage
 import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.InputStream
+import java. time. LocalDate
+import java. time. format. DateTimeFormatter
 
 class NoticeViewModel: ViewModel() {
 
     private val noticeRef = Firebase.firestore.collection(NOTICE)
-
-    private  val storageRef = Firebase.storage.reference
 
     private val _isPosted = MutableLiveData<Boolean>()
     val isPosted : LiveData<Boolean> = _isPosted
@@ -41,7 +40,7 @@ class NoticeViewModel: ViewModel() {
         )
     )
 
-    fun saveNotice(inputStream: InputStream?, title: String, link: String) {
+    fun saveNotice(inputStream: InputStream?, title: String, link: String,date:String,time:String,venue:String) {
         _isPosted.postValue(false)
         if (inputStream == null) {
             _isPosted.postValue(false)
@@ -56,9 +55,10 @@ class NoticeViewModel: ViewModel() {
                         "secure", true )
                 )
 
-                val imageUrl = uploadResult["url"] as String
+                var imageUrl = uploadResult["url"] as String
+                imageUrl = imageUrl.replace("http://", "https://")
                 val randomUid = UUID.randomUUID().toString()
-                uploadNotice(imageUrl, randomUid, title, link)
+                uploadNotice(imageUrl, randomUid, title, link,date,time,venue)
             } catch (e: Exception) {
                 e.printStackTrace()
                 _isPosted.postValue(false)
@@ -66,12 +66,15 @@ class NoticeViewModel: ViewModel() {
         }
     }
 
-    private fun uploadNotice(imageUrl: String, docId: String, title: String, link: String) {
+    private fun uploadNotice(imageUrl: String, docId: String, title: String, link: String,date: String,time: String,venue: String) {
         val map = mutableMapOf(
             "imageUrl" to imageUrl,
             "docId" to docId,
             "title" to title,
-            "link" to link
+            "link" to link,
+            "date" to date,
+            "time" to time,
+            "venue" to venue
         )
 
         noticeRef.document(docId).set(map)
@@ -81,10 +84,37 @@ class NoticeViewModel: ViewModel() {
 
     fun getNotice() {
         noticeRef.get().addOnSuccessListener { querySnapshot ->
-            val list = querySnapshot.map { doc -> doc.toObject(NoticeModel::class.java) }
-            _noticeList.postValue(list)
+            val today = LocalDate.now()
+
+            querySnapshot.forEach { doc ->
+                val notice = doc.toObject(NoticeModel::class.java)
+                val noticeDate = try {
+                    LocalDate.parse(notice.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                } catch (e: Exception) {
+                    null
+                }
+
+                if (noticeDate != null && noticeDate.isBefore(today)) {
+                    // Delete outdated notice from the database
+                    deleteNotice(notice)
+                } else {
+                    // Add valid notice to the live data list
+                    _noticeList.postValue(
+                        querySnapshot.mapNotNull { validDoc ->
+                            val validNotice = validDoc.toObject(NoticeModel::class.java)
+                            val validNoticeDate = try {
+                                LocalDate.parse(validNotice.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                            } catch (e: Exception) {
+                                null
+                            }
+                            if (validNoticeDate == null || validNoticeDate.isBefore(today)) null else validNotice
+                        }
+                    )
+                }
+            }
         }
     }
+
 
     fun deleteNotice(noticeModel: NoticeModel) {
         if (noticeModel.docId == null || noticeModel.imageUrl == null) {

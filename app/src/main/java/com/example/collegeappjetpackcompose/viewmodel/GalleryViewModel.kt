@@ -16,6 +16,9 @@ import com.cloudinary.utils.ObjectUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import android. widget. Toast
+import android. content. Context
+import android. util. Log
 
 class GalleryViewModel: ViewModel() {
 
@@ -53,7 +56,8 @@ class GalleryViewModel: ViewModel() {
                     inputStream,
                     ObjectUtils.asMap("folder", "gallery/")
                 )
-                val imageUrl = uploadResult["url"] as String
+                var imageUrl = uploadResult["url"] as String
+                imageUrl = imageUrl.replace("http://", "https://")
                 if (isCategory) {
                     uploadCategory(imageUrl, category)
                 } else {
@@ -72,6 +76,8 @@ class GalleryViewModel: ViewModel() {
         map["category"] = category
         map["images"]= FieldValue.arrayUnion(image)
 
+        map["timestamp"] = System.currentTimeMillis()
+
         galleryRef.document(category).set(map)
             .addOnSuccessListener {
                 _isPosted.postValue(true)
@@ -82,51 +88,103 @@ class GalleryViewModel: ViewModel() {
     }
 
 
-    private fun updateImage(image:String,category: String) {
+    private fun updateImage(image: String, category: String) {
+        val updates = mutableMapOf<String, Any>(
+            "images" to FieldValue.arrayUnion(image),
+            "timestamp" to System.currentTimeMillis() // Update the timestamp to the current time
+        )
 
-
-        galleryRef.document(category).update("images", FieldValue.arrayUnion(image))
+        galleryRef.document(category).update(updates)
             .addOnSuccessListener {
                 _isPosted.postValue(true)
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 _isPosted.postValue(false)
             }
-
     }
+
 
 
     fun getGallery() {
         galleryRef.get().addOnSuccessListener { querySnapshot ->
-            val list = querySnapshot.map { doc -> doc.toObject(GalleryModel::class.java) }
-            _galleryList.postValue(list)
+            val now = System.currentTimeMillis()
+            val cutoff = now - 30 * 24 * 60 * 60 * 1000 // 30 days ago
+
+            val validGalleries = mutableListOf<GalleryModel>()
+
+            for (doc in querySnapshot.documents) {
+                val gallery = doc.toObject(GalleryModel::class.java)
+                if (gallery != null) {
+                    Log.d("GalleryDebug", "Category: ${gallery.category}, Timestamp: ${gallery.timestamp}")
+                        // Add valid galleries to the list
+                        validGalleries.add(gallery)
+                }
+            }
+
+            // Update the gallery list LiveData with valid galleries
+            _galleryList.postValue(validGalleries)
         }
     }
 
-    fun deleteGallery(galleryModel: GalleryModel) {
-        if (galleryModel.category.isNullOrEmpty() || galleryModel.images.isNullOrEmpty()) {
+    // Helper function to delete old galleries
+    private fun deleteGalleryAutomatically(gallery: GalleryModel, documentId: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                gallery.images?.forEach { imageUrl ->
+                    val publicId = extractCloudinaryPublicId(imageUrl)
+                    cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap())
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        galleryRef.document(documentId).delete()
+            .addOnSuccessListener {
+                Log.d("GalleryViewModel", "Deleted old gallery: $documentId")
+            }
+            .addOnFailureListener { e ->
+                Log.e("GalleryViewModel", "Failed to delete old gallery: $documentId", e)
+            }
+    }
+
+    // Utility function to extract Cloudinary public ID from the image URL
+    private fun extractCloudinaryPublicId(imageUrl: String): String {
+        val urlSegments = imageUrl.split("/")
+        val fileName = urlSegments.last()
+        return fileName.substringBefore(".") // Extract public ID without the file extension
+    }
+
+    fun deleteGallery(galleryModel: GalleryModel, context: Context) {
+        // Check if the gallery has images
+        if (galleryModel.images!!.isNotEmpty()) {
+            // Show a toast to inform the user
+            Toast.makeText(
+                context,
+                "Please delete all images from the gallery before deleting the gallery.",
+                Toast.LENGTH_LONG
+            ).show()
             _isDeleted.postValue(false)
             return
         }
-
-        galleryRef.document(galleryModel.category).delete()
-            .addOnSuccessListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        galleryModel.images.forEach { imageUrl ->
-                            val uri = Uri.parse(imageUrl)
-                            val publicId = uri.lastPathSegment?.substringBefore(".") ?: ""
-                            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap())
-                        }
-                        _isDeleted.postValue(true)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        _isDeleted.postValue(false)
-                    }
+        if (galleryModel.images.isNullOrEmpty()) {
+            galleryRef.document(galleryModel.category.toString()).delete()
+                .addOnSuccessListener {
+                    _isDeleted.postValue(true)
+                    Toast.makeText(context, "Gallery deleted successfully!", Toast.LENGTH_SHORT).show()
                 }
-            }
-            .addOnFailureListener { _isDeleted.postValue(false) }
+                .addOnFailureListener {
+                    _isDeleted.postValue(false)
+                    Toast.makeText(context, "Failed to delete gallery.", Toast.LENGTH_SHORT).show()
+                }
+        }
+
+
+
+        // Proceed to delete the gallery if no images are present
+
     }
+
 
     fun deleteImage(category: String, image: String) {
         galleryRef.document(category).update("images", FieldValue.arrayRemove(image))

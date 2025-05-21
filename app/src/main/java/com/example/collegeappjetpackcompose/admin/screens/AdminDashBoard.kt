@@ -9,6 +9,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx. compose. ui. graphics. Color
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,12 +21,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.collegeappjetpackcompose.models.DashBoardItemModel
 import com.example.collegeappjetpackcompose.navigation.Routes
 import com.example.collegeappjetpackcompose.ui.theme.TITLE_SIZE
+import androidx. navigation. NavGraph. Companion. findStartDestination
+import androidx. compose. ui. platform. LocalContext
+import android. widget. Toast
+import com. google. firebase. auth. FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminDashBoard(navController: NavController) {
-
-
+    val context = LocalContext.current
+    val firebaseAuth = FirebaseAuth.getInstance()
 
         val list = listOf(
             DashBoardItemModel("Manage Banner",
@@ -40,6 +45,8 @@ fun AdminDashBoard(navController: NavController) {
                 Routes.ManageAssign.route),
             DashBoardItemModel("Manage School Info",
                 Routes.ManageCollegeInfo.route),
+            DashBoardItemModel("Logout", "logout")
+
         )
 
 
@@ -53,36 +60,49 @@ fun AdminDashBoard(navController: NavController) {
                     )*/
                     )
             },
-        content = {padding ->
-            LazyColumn (modifier = Modifier.padding(padding)) {
+            content = { padding ->
+                LazyColumn(modifier = Modifier.padding(padding)) {
+                    items(items = list) { item ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp)
+                                .clickable {
+                                    if (item.title == "Logout") {
+                                        // Perform logout
+                                        firebaseAuth.signOut()
 
-                items(items = list, itemContent = {
+                                        // Show logout success toast
+                                        Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT).show()
 
-                    Card(modifier = Modifier
-                     .fillMaxWidth()
-                     .padding(8.dp)
+                                        // Navigate to the login screen
+                                        navController.navigate(Routes.SignIn.route) {
+                                            // Clear the back stack to prevent going back to the dashboard after logout
+                                            popUpTo(0)
+                                        }
 
-                     .clickable {
-
-                     navController.navigate(it.route)
-
-
-                     }) {
-                     Text(
-                         text = it.title,
-                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                         fontWeight = FontWeight.Bold,
-                         fontSize = TITLE_SIZE
-                     )
-                 }
-                })
+                                    } else {
+                                        // Navigate to respective route for other dashboard items
+                                        navController.navigate(item.route)
+                                    }
+                                }
+                        ) {
+                            Text(
+                                text = item.title,
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = TITLE_SIZE,
+                                color = if (item.title == "Logout") Color.Red else Color.Black // Highlight logout in red
+                            )
+                        }
+                    }
+                }
             }
-        }
-    )
+        )
 }
 
 @Preview(showSystemUi = true)
 @Composable
-fun Routes.AdminDashBoardPreview(){
+fun AdminDashBoardPreview() {
     AdminDashBoard(navController = rememberNavController())
 }

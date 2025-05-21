@@ -16,5 +16,6 @@ sealed class Routes(val route:String) {
     object ManageNotice: Routes("manage_notice")
     object FacultyDetailScreen: Routes("faculty_details/{catName}")
     object Assign: Routes("Assignments")
-
+    object SignIn : Routes("signin")
+    object SignUp : Routes("signup")
 }

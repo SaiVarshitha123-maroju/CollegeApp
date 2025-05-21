@@ -58,7 +58,8 @@ class FacultyViewModel: ViewModel() {
                     stream,
                     ObjectUtils.asMap("folder", "faculty/")
                 )
-                val imageUrl = uploadResult["url"] as String
+                var imageUrl = uploadResult["url"] as String
+                imageUrl = imageUrl.replace("http://", "https://")
                 val randomUid = UUID.randomUUID().toString()
                 uploadFaculty(imageUrl, randomUid, name, email, position, catName)
             } catch (e: Exception) {
